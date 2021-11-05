@@ -9,8 +9,13 @@ cd ~/Documenti/GitHub_projects/ADM-HW3
 git checkout ame
 
 #Controlla che non ci siano aggiornamenti dal main e poi carica le modifiche fatte nello stage		
+<<<<<<< HEAD
 git pull origin ame
 git pull origin main
+=======
+git pull origin main
+git pull origin ame
+>>>>>>> ame
 git add * 
 
 #Controlla che non siano stati eliminati dei file dalla directory		 
