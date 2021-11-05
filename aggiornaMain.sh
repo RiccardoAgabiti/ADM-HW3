@@ -3,9 +3,9 @@
 #Questo script aggiorna il main aggiungendo le modifiche fatte al branch
 
 #Si sposta nella directory di git
-cd ~/Documenti/GitHub_projects/ADM-HW2
+cd ~/Documenti/GitHub_projects/ADM-HW3
 
-
+./updateBranch.sh
 #seleziona il branch da modificare
 git checkout main
 
