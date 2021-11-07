@@ -38,20 +38,24 @@ def save_html_AnimePage_In_ListAnimePage(urls, folderNumber):
 
 
 def get_listAnimePage(index, listPages):
-    listPages[index] = requests.get(f"https://myanimelist.net/topanime.php{'?limit={}'.format(50*index) if(index > 0) else ''}")
-    
+    listPages[index] = requests.get(f"https://myanimelist.net/topanime.php{'?limit={}'.format(50*index)}")
+
+
 
 def get_urls_In_ListAnimePage(page, pages):
     
     soup = BeautifulSoup(page.content, "html.parser")
     
     # Find all links of the animes
-    animeUrls = soup.find_all("a", class_="hoverinfo_trigger fl-l ml12 mr8", id=lambda string: string and string.startswith('#area'), href=True)
+    Urls = soup.find_all("a", class_="hoverinfo_trigger fl-l ml12 mr8", id=lambda string: string and string.startswith('#area'), href=True)
     
     #get just the href
-    animeUrls = [x['href'] for x in animeUrls]
+    animeLinks = []
+    for link in Urls:
+        link_anime = str(link.get("href"))
+        animeLinks.append(link_anime)
     
-    pages[pages.index(page)] = animeUrls
+    pages[pages.index(page)] = animeLinks
     
     
 def initGet():
@@ -68,7 +72,7 @@ def initGet():
     return pages
 
 
-def getAnime(start=0, pages):
+def getAnime(pages, start=0):
     pages_from_start_to_end = pages[start:]
     for i in range(0, len(pages_from_start_to_end)) : 
         save_html_AnimePage_In_ListAnimePage(pages_from_start_to_end[i], start+i+1)
