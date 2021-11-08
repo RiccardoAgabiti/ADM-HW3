@@ -32,7 +32,7 @@ def save_html_animePage(url, directoryNum, index):
         file.write(req.text)
     
 
-def save_html_AnimePage_In_ListAnimePage(urls, folderNumber):
+def save_html_AnimePage_In_ListAnimePage(urls, folderNumber, CPUs = multiprocessing.cpu_count()):
     pool = ThreadPool(CPUs)
     pool.map(lambda url : save_html_animePage(url, folderNumber, (50*(folderNumber-1)) + urls.index(url) +1), urls)
 
@@ -58,9 +58,7 @@ def get_urls_In_ListAnimePage(page, pages):
     pages[pages.index(page)] = animeLinks
     
     
-def initGet():
-
-    CPUs = multiprocessing.cpu_count()
+def initGet(CPUs = multiprocessing.cpu_count()):
 
     pages = [None] * 400
     numberOfPage = range(0,400)
