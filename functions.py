@@ -58,10 +58,10 @@ def get_urls_In_ListAnimePage(page, pages):
     pages[pages.index(page)] = animeLinks
     
     
-def initGet(CPUs = multiprocessing.cpu_count()):
+def initGet(pageToGet = 400 ,CPUs = multiprocessing.cpu_count()):
 
-    pages = [None] * 400
-    numberOfPage = range(0,400)
+    pages = [None] * pageToGet
+    numberOfPage = range(0, pageToGet)
 
     pool = ThreadPool(CPUs)
     pool.map(lambda num : get_listAnimePage(num, pages), numberOfPage)   
