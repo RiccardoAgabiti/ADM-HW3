@@ -5,6 +5,9 @@ import multiprocessing
 from multiprocessing.dummy import Pool as ThreadPool
 import pathlib
 from pathlib import Path
+import csv
+import collections
+import re
 
 """
 ============================================================================================================
@@ -124,8 +127,8 @@ def getDataFromPage(pagePath):
     temp = soup.find_all("div", {"class": "spaceit_pad"}) 
 
     out=[]
-    tempDict = dict()
-    finalDict = dict()
+    tempDict = collections.OrderedDict()
+    finalDict = collections.OrderedDict()
 
     for i in temp:
         out.append(i.text)
@@ -302,3 +305,32 @@ def getDataFromPage(pagePath):
     finalDict["Roles"] = role
 
     return finalDict
+
+
+def write_anime_tsv(pagePath):
+    data = getDataFromPage(pagePath)
+    
+    #Use regex to find the anime number
+    pattern = re.compile("[0-9]")
+    index = pattern.findall(pagePath)[1:]
+    index = "".join(index)
+    
+    save_path = f"{pathlib.Path().resolve()}/anime_tsv"
+    Path(save_path).mkdir(parents=True, exist_ok=True)
+    
+    if(sys.platform != "win32"):
+        with open(f"{save_path}/anime_{index}.tsv", "w") as file:
+            tsv_writer = csv.writer(file, delimiter='\t')
+
+            tsv_writer.writerow(data.keys())
+
+            tsv_writer.writerow(data.values())
+    else:
+        with open(f"{save_path}\anime_{index}.tsv", "w") as file:
+            tsv_writer = csv.writer(file, delimiter='\t')
+
+            tsv_writer.writerow(data.keys())
+
+            tsv_writer.writerow(data.values())
+
+
