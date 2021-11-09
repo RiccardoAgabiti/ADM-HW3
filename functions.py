@@ -1,4 +1,4 @@
-import asyncio
+import sys
 import requests
 from bs4 import BeautifulSoup
 import multiprocessing
@@ -28,9 +28,12 @@ def save_html_animePage(url, directoryNum, index):
     Path(save_path).mkdir(parents=True, exist_ok=True)
     
     # Write the file in the directory.
-    with open(f"{save_path}/article_{index}.html", 'w') as file:
-        file.write(req.text)
-    
+    if(sys.platform != "windows"):
+        with open(f"{save_path}/article_{index}.html", 'w') as file:
+            file.write(req.text)
+    else:
+        with open(f"{save_path}\article_{index}.html", 'w') as file:
+            file.write(req.text)
 
 def save_html_AnimePage_In_ListAnimePage(urls, folderNumber, CPUs = multiprocessing.cpu_count()):
     pool = ThreadPool(CPUs)
