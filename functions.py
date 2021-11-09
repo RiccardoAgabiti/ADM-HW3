@@ -151,7 +151,7 @@ def getDataFromPage(pagePath):
     else:
         finalDict["Type"] = ""
 
-    if(tempDict["Episodes"] != "N/A"):
+    if(tempDict["Episodes"] != "N/A" and tempDict['Episodes'] != 'Unknown'):
         finalDict["Episodes"] = int(tempDict["Episodes"]) #number of episodes
     else:
         finalDict["Episodes"] = None
@@ -200,7 +200,10 @@ def getDataFromPage(pagePath):
     #ADDING THE SYNOPSIS
     temp = soup.find("p", itemprop="description")
 
-    finalDict["Synopsis"] = temp.text.replace("\n", " ")
+    if(temp.text != "No synopsis information has been added to this title. Help improve our database by adding a synopsis here."):
+        finalDict["Synopsis"] = temp.text.replace("\n", " ")
+    else:
+        finalDict["Synopsis"] = None
 
     #ADDING THE RELATED ANIME
     try:
@@ -307,13 +310,26 @@ def getDataFromPage(pagePath):
     return finalDict
 
 
+def animeFile_path():
+    animePath = []
+
+    for animeDir in range(1,384):
+        for animePage in range(1,51):
+            try:
+                with open(f'./animeList_pages/{animeDir}th_page/article_{animePage + ((animeDir-1)*50)}.html', 'r') as file:
+                    pass
+                animePath.append(f'./animeList_pages/{animeDir}th_page/article_{animePage + ((animeDir-1)*50)}.html')
+            except:
+                pass
+    return animePath
+
+
 def write_anime_tsv(pagePath):
     data = getDataFromPage(pagePath)
     
     #Use regex to find the anime number
-    pattern = re.compile("[0-9]")
-    index = pattern.findall(pagePath)[1:]
-    index = "".join(index)
+    pattern = re.compile("_[0-9].*")
+    index = pattern.findall(pagePath)[0].strip('_html.')
     
     save_path = f"{pathlib.Path().resolve()}/anime_tsv"
     Path(save_path).mkdir(parents=True, exist_ok=True)
@@ -332,5 +348,15 @@ def write_anime_tsv(pagePath):
             tsv_writer.writerow(data.keys())
 
             tsv_writer.writerow(data.values())
+
+
+
+def write_all_anime_tsv(CPUs = multiprocessing.cpu_count()):
+
+    pool = ThreadPool(CPUs)
+
+    anime = animeFile_path()
+
+    pool.map(lambda anime: write_anime_tsv(anime), anime);
 
 
