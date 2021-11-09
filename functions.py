@@ -28,7 +28,7 @@ def save_html_animePage(url, directoryNum, index):
     Path(save_path).mkdir(parents=True, exist_ok=True)
     
     # Write the file in the directory.
-    if(sys.platform != "windows"):
+    if(sys.platform != "win32"):
         with open(f"{save_path}/article_{index}.html", 'w') as file:
             file.write(req.text)
     else:
